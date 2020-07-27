@@ -1,0 +1,25 @@
+﻿<Window x:Class="HeliosProfileUtils.ExtractedPanelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HeliosProfileUtils"
+        mc:Ignorable="d"
+        Title="No Longer In Use" Height="450" Width="800"  Closing="WindowClosing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="9*"/>
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row ="0" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="100,0,100,10">
+            <Button Name="BtnExtractPanel" Click="Btn_Click" Margin="5,4,5,0">Extract Panel Data</Button>
+            <Button Name="Btn2" Click="Btn_Click" Margin="5,4,5,0" Visibility="Hidden">Button 2</Button>
+            <Button Name="Btn3" Click="Btn_Click" Margin="5,4,5,0" Visibility="Hidden">Button 3</Button>
+            <Button Name="Btn4" Click="Btn_Click" Margin="5,4,5,0" Visibility="Hidden">Button 4</Button>
+        </WrapPanel>
+        <TextBox Name="messageLog"  Grid.Row ="1" HorizontalAlignment="Left"  Width="776" Margin="8,0,8,0" />
+        <TextBox Name="leftEditor"  Grid.Row ="2" HorizontalAlignment="Left" Width="380" Margin="8,0,8,8" />
+        <TextBox Name="rightEditor" Grid.Row ="2" HorizontalAlignment="Right" Width="380" Margin="8,0,8,8" />
+    </Grid>
+</Window>

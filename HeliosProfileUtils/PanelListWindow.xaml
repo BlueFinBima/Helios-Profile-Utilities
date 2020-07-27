@@ -1,0 +1,19 @@
+﻿<Window x:Class="HeliosProfileUtils.PanelListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HeliosProfileUtils"
+        mc:Ignorable="d"
+        Title="Helios Profile Panel List" Height="450" Width="800" Closing="WindowClosing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row ="0" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="40,4,40,10">
+            <Button Name="BtnExtractPanel" Click="BtnExtractPanel_Click" Margin="5,0,5,0">Extract Panel</Button>
+        </WrapPanel>
+        <TreeView Grid.Row="1" Margin="8,0,8,8" Background="Azure"  x:Name="treeView" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+    </Grid>
+</Window>

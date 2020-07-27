@@ -1,0 +1,28 @@
+﻿<Window x:Class="HeliosProfileUtils.HeliosProfileUtilityWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HeliosProfileUtils"
+        mc:Ignorable="d"
+        Title="Helios Profile Utility" Height="450" Width="800" Closing="MainWindowClosing">
+        <DockPanel Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row ="0" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="100,0,100,10">
+                <Button Name="BtnOpenProfile" Click="BtnOpenProfile_Click" Margin="5,0,5,0">Open Helios Profile</Button>
+                <Button Name="BtnPanelExtractor" Click="BtnPanelExtractor_Click" Margin="5,0,5,0">Extract Panels</Button>
+                <Button Name="BtnPanelInserter" Click="BtnPanelInserter_Click" Margin="5,0,5,0">Insert Panels</Button>
+                <Button Name="BtnPackageImages" Click="BtnPackageImages_Click" Margin="5,0,5,0">Package Images</Button>
+                <Button Name="BtnSaveProfile" Click="BtnSaveProfile_Click" Margin="5,0,5,0">Save Modified Profile</Button>
+            </WrapPanel>
+            <TextBox Name="messageLog"  Grid.Row ="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="LightPink" HorizontalAlignment="Center" Width="772" Margin="0,0,0,0" />
+            <TextBox Name="profileEditor"  Grid.Row ="2" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Left" Width="380" Margin="0,10,0,0" />
+            <TextBox Name="imagesEditor" Grid.Row ="2"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Right" Width="380" Margin="0,10,0,0" />
+        </Grid>
+    </DockPanel>
+</Window>

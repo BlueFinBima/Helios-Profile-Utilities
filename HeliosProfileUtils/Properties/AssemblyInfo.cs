@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("HeliosProfileUtils")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Helios Profile Utility")]
+[assembly: AssemblyDescription("This is an external application for manipulating a profile from Helios Virtual Cockpit.\nThe utility can put image resources into a single directory, and attempts to impose a little structure on image resource names.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("BlueFinBima")]
 [assembly: AssemblyProduct("HeliosProfileUtils")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright BlueFinBima ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
