@@ -6,23 +6,70 @@
         xmlns:local="clr-namespace:HeliosProfileUtils"
         mc:Ignorable="d"
         Title="Helios Profile Utility" Height="450" Width="800" Closing="MainWindowClosing">
-        <DockPanel Margin="10">
+    <DockPanel Margin="10">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Click="MenuItem_Click" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="_Open" Click="MenuItem_Click" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="_Close" Click="MenuItem_Click" InputGestureText="Ctrl+D"/>
+                <MenuItem Header="_Save" Click="MenuItem_Click" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="S_ave As" Click="MenuItem_Click" InputGestureText="Ctrl+Shift+S"/>
+                <Separator />                
+                <MenuItem Header="_Exit" Click="MenuItem_Click" InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Command="ApplicationCommands.Copy"/>
+                <MenuItem Command="ApplicationCommands.Cut"/>
+                <MenuItem Command="ApplicationCommands.Paste"/>
+            </MenuItem>
+
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Extract Panel" Click="MenuItem_Click"/>
+                <MenuItem Header="E_xtract Interface" Click="MenuItem_Click" IsEnabled="True"/>
+                <Separator />
+                <MenuItem Header="_Insert Elements" Click="MenuItem_Click"/>
+                <Separator />
+                <MenuItem Header="_Package Images" Click="MenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Click="MenuItem_Click"/>
+            </MenuItem>
+        </Menu>
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="374" Width="32*" Name="LeftColumnDefinition" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition MinWidth="374" Width="32*"  Name="RightColumnDefinition" />
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="4*"/>
             </Grid.RowDefinitions>
-            <WrapPanel Grid.Row ="0" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="100,0,100,10">
-                <Button Name="BtnOpenProfile" Click="BtnOpenProfile_Click" Margin="5,0,5,0">Open Helios Profile</Button>
-                <Button Name="BtnPanelExtractor" Click="BtnPanelExtractor_Click" Margin="5,0,5,0">Extract Panels</Button>
-                <Button Name="BtnPanelInserter" Click="BtnPanelInserter_Click" Margin="5,0,5,0">Insert Panels</Button>
-                <Button Name="BtnPackageImages" Click="BtnPackageImages_Click" Margin="5,0,5,0">Package Images</Button>
-                <Button Name="BtnSaveProfile" Click="BtnSaveProfile_Click" Margin="5,0,5,0">Save Modified Profile</Button>
+            <WrapPanel Grid.Row ="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="100,0,100,10">
+                <Button Name="BtnOpenProfile" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Open Helios Profile</Button>
+                <Button Name="BtnPanelExtractor" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Extract Panels</Button>
+                <Button Name="BtnElementInserter" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Insert Elements</Button>
+                <Button Name="BtnPackageImages" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Package Images</Button>
+                <Button Name="BtnSaveProfile" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Save Modified Profile</Button>
             </WrapPanel>
-            <TextBox Name="messageLog"  Grid.Row ="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="LightPink" HorizontalAlignment="Center" Width="772" Margin="0,0,0,0" />
-            <TextBox Name="profileEditor"  Grid.Row ="2" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Left" Width="380" Margin="0,10,0,0" />
-            <TextBox Name="imagesEditor" Grid.Row ="2"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Right" Width="380" Margin="0,10,0,0" />
+            <TextBox Name="messageLog" Grid.Column="0" Grid.ColumnSpan="3"  Grid.Row ="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="LightPink" HorizontalAlignment="Center" MinWidth="772" Margin="0,0,0,0" />
+            <TextBox Name="profileEditor"  Grid.Column="0" Width= "{Binding ElementName=LeftColumnDefinition, Path=Width}" Height="Auto"  MinWidth="374" Grid.Row ="2" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Center" Margin="0,10,0,0" TextChanged="Editor_TextChanged" />
+            <TextBox Name="imagesEditor" Grid.Column="2"  Width= "{Binding ElementName=RightColumnDefinition, Path=Width}" Height="Auto" MinWidth="374" Grid.Row ="2"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Center" Margin="0,10,0,0" TextChanged="Editor_TextChanged" />
         </Grid>
     </DockPanel>
+    <Window.CommandBindings>
+        <CommandBinding Command="Close" Executed="CommandBinding_Executed" />
+        <CommandBinding Command="Save" Executed="CommandBinding_Executed" />
+        <CommandBinding Command="SaveAs" Executed="CommandBinding_Executed" />
+        <CommandBinding Command="Open" Executed="CommandBinding_Executed" />
+        <CommandBinding Command="New" Executed="CommandBinding_Executed" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+         <KeyBinding Key="D" Modifiers="Control" Command="Close"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
+        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="SaveAs"/>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
+        <KeyBinding Key="N" Modifiers="Control" Command="New"/>
+    </Window.InputBindings>
 </Window>

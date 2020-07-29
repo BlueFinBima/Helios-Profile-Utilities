@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ProfileEditor.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,6 +85,10 @@
       <DependentUpon>HeliosProfileUtilityWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="InterfaceListWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="PanelListWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -89,6 +96,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputBox.cs" />
+    <Compile Include="InterfaceListWindow.xaml.cs">
+      <DependentUpon>InterfaceListWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PanelListWindow.xaml.cs">
       <DependentUpon>PanelListWindow.xaml</DependentUpon>
     </Compile>
@@ -120,6 +130,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ControlCenter.ico" />
+    <Resource Include="Resources\Helios.ico" />
+    <Resource Include="ProfileEditor.ico" />
+    <Content Include="Resources\HeliosLogo.png" />
+    <Resource Include="Resources\ProfileEditor.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

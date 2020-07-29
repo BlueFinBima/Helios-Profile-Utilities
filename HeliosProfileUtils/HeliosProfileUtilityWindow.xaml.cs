@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.IO;
 using System.Xml;
-using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace HeliosProfileUtils
 {
@@ -14,6 +14,7 @@ namespace HeliosProfileUtils
     public partial class HeliosProfileUtilityWindow : Window
     {
         private string _originalFileName = "";
+        private string _windowTitle = "";
         private string _newFileName = "";
         public static XmlDocument originalProfile;
         private bool _unsavedChanges = false;
@@ -24,7 +25,7 @@ namespace HeliosProfileUtils
         public HeliosProfileUtilityWindow()
         {
             InitializeComponent();
-            new AboutBox1().ShowDialog();
+            _windowTitle = this.Title;
         }
         public string SelectedProfilePanelName
         {
@@ -47,37 +48,161 @@ namespace HeliosProfileUtils
             set => originalProfile = value;
         }
 
-        private void BtnOpenProfile_Click(object sender, RoutedEventArgs e)
+        private bool UnsavedChanges
         {
-            if (_unsavedChanges)
+            get => _unsavedChanges;
+            set
+            {
+                this.Title = string.Format("{0} : {1} {2}", _windowTitle, value ? "*" : "", _originalFileName);
+                _unsavedChanges = value;
+            }
+        }
+
+        private void Btn_Click(object sender, RoutedEventArgs e)
+        {
+            switch (((System.Windows.Controls.Button)e.Source).Name) { 
+                case "BtnOpenProfile":
+                    OpenProfile();
+                    break;
+                case "BtnSaveProfile":
+                    SaveProfile();
+                    break;
+                case "BtnPanelExtractor":
+                    ExtractPanel();
+                    break;
+                case "BtnElementInserter":
+                    InsertElements();
+                    break;
+                case "BtnPackageImages":
+                    PackageImages();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            switch (((System.Windows.Controls.MenuItem)e.Source).Header)
+            {
+                case "_Open":
+                    OpenProfile();
+                    break;
+                case "_New":
+                    NewProfile();
+                    break;
+                case "_Save":
+                case "S_ave As":
+                    SaveProfile();
+                    break;
+                case "_Close":
+                case "_Exit":
+                    this.Close();
+                    break;
+                case "_Extract Panel":
+                    ExtractPanel();
+                    break;
+                case "E_xtract Interface":
+                    ExtractInterface();
+                    break;
+                case "_Insert Elements":
+                    InsertElements();
+                    break;
+                case "_Package Images":
+                    PackageImages();
+                    break;                  
+                case "_About":
+                    new AboutBox1().ShowDialog();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Editor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            switch (((System.Windows.Controls.TextBox)e.Source).Name) {
+                case "profileEditor":
+                    _exportedControlElements = ((System.Windows.Controls.TextBox)e.Source).Text;
+                    break;
+                case "imagesEditor":
+                    _exportedBindingsElements = ((System.Windows.Controls.TextBox)e.Source).Text;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void CommandBinding_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            switch (((System.Windows.Input.RoutedCommand)e.Command).Name)
+            {
+                case "Close":
+                    this.Close();
+                    break;
+                case "Save":
+                    SaveProfile();
+                    break;
+                case "SaveAs":
+                    SaveProfile();
+                    break;
+                case "Open":
+                    OpenProfile();
+                    break;
+                case "Quit":
+                    this.Close();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+            private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs eventArgs)
+        {
+            if (UnsavedChanges)
+            {
+                UnsavedChanges = !PromptBox.ShowDialog("Unsaved Changes", "There are unsaved changes to the loaded Helios profile. If you CONTINUE, you will lose the changes. " +
+    "  Press CANCEL to go back and save these changes.", "Cancel", "Continue");
+            }
+            eventArgs.Cancel = UnsavedChanges;
+        }
+
+        private void OpenProfile()
+        {
+            if (UnsavedChanges)
             {
                 if (PromptBox.ShowDialog("Unsaved Changes", "There are unsaved changes in the currently loaded Helios profile.  You should consider saving these before loading another profile.", "Discard Changes", "Save Changes"))
                 {
-                    BtnSaveProfile_Click(sender, e);
+                    SaveProfile();
                 }
-                else {
+                else
+                {
                     // Discard changes
-                    _unsavedChanges = false;
+                    UnsavedChanges = false;
                 }
-            } 
-            if (!_unsavedChanges)
+            }
+            if (!UnsavedChanges)
             {
-                OpenFileDialog openProfileDialog = new OpenFileDialog
+                OpenFileDialog openProfileDialog = new OpenFileDialog()
                 {
                     InitialDirectory = Environment.GetEnvironmentVariable("userprofile") + "\\Documents\\Helios\\Profiles\\",
-                    Filter = "Helios Profiles (*.hpf)|*.hpf;*.hpf.bak|All files (*.*)|*.*"
+                    Filter = "Helios Profiles (*.hpf)|*.hpf;*.hpf.bak|All files (*.*)|*.*",
+                    RestoreDirectory = true
                 };
-                if (openProfileDialog.ShowDialog() == true)
+                if (openProfileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    originalProfile = new XmlDocument();
-                    originalProfile.PreserveWhitespace = true;
+                    originalProfile = new XmlDocument()
+                    {
+                        PreserveWhitespace = true
+                    };
                     _originalFileName = openProfileDialog.FileName;
                     if (_originalFileName != "")
                     {
                         try
                         {
                             originalProfile.Load(_originalFileName);
-                            _unsavedChanges = false;
+                            UnsavedChanges = false;
                         }
                         catch (Exception ex)
                         {
@@ -104,12 +229,38 @@ namespace HeliosProfileUtils
                 }
             }
         }
-
-        private void BtnPackageImages_Click(object sender, RoutedEventArgs e)
+        private void NewProfile()
         {
-            String projectImageDir = "FA-18C_Linx";
-            projectImageDir = InputBox.ShowDialog("Image Directory","Enter the Directory Name For Saving Images",projectImageDir,"Cancel","Ok");
-            if(!Directory.Exists(string.Format("{0}\\Documents\\Helios\\Images\\{1}\\", Environment.GetEnvironmentVariable("userprofile"), projectImageDir)))
+            if (UnsavedChanges)
+            {
+                if (PromptBox.ShowDialog("Unsaved Changes", "There are unsaved changes in the currently loaded Helios profile.  You should consider saving these before loading another profile.", "Discard Changes", "Save Changes"))
+                {
+                    SaveProfile();
+                }
+                else
+                {
+                    _originalFileName = "untitled.hpf";
+                    UnsavedChanges = false;
+                }
+            }
+            if (!UnsavedChanges)
+            {
+                _selectedProfilePanelName = "";
+                _exportedBindingsElements = "";
+                _exportedControlElements = "";
+                messageLog.Text = "";
+                imagesEditor.Text = "";
+                profileEditor.Text = "";
+                _originalFileName = "untitled.hpf";
+                UnsavedChanges = false;
+            }
+        }
+
+        private void PackageImages()
+        {
+            String projectImageDir = "FA-18C_Images";
+            projectImageDir = InputBox.ShowDialog("Image Directory", "Enter the Directory Name For Saving Images", projectImageDir, "Cancel", "Ok");
+            if (!Directory.Exists(string.Format("{0}\\Documents\\Helios\\Images\\{1}\\", Environment.GetEnvironmentVariable("userprofile"), projectImageDir)))
             {
                 try
                 {
@@ -129,9 +280,9 @@ namespace HeliosProfileUtils
                 messageLog.Text += string.Format("Starting to process images to {0}\n", projectImageDir);
                 foreach (XmlNode imageNode in imageList)
                 {
-                    if (imageNode != null && imageNode.InnerText != "" && !imageNode.InnerText.StartsWith("{") && imageNode.InnerText.IndexOf(".png",StringComparison.InvariantCultureIgnoreCase)>0)
+                    if (imageNode != null && imageNode.InnerText != "" && !imageNode.InnerText.StartsWith("{") && imageNode.InnerText.IndexOf(".png", StringComparison.InvariantCultureIgnoreCase) > 0)
                     {
-                        _unsavedChanges = true;
+                        UnsavedChanges = true;
                         if (!imageDictionary.ContainsKey(imageNode.InnerText.Replace("/", "\\")))
                         {
                             imageDictionary.Add(imageNode.InnerText.Replace("/", "\\"), "1");  // Save a list of unique image filenames
@@ -157,46 +308,83 @@ namespace HeliosProfileUtils
                         messageLog.Text += string.Format("Copy failed: 0}\n", ex.Message);
                     }
                 }
-            } else
+            }
+            else
             {
                 messageLog.Text += string.Format("Copy failed due to no target directory.\n");
             }
         }
 
-        private void BtnPanelExtractor_Click(object sender, RoutedEventArgs e)
+        private void ExtractPanel()
         {
             // This passes the in memory DOM version of the profile
             PanelListWindow plw = new PanelListWindow(this);
             plw.Show();
         }
-        private void BtnPanelInserter_Click(object sender, RoutedEventArgs e)
+
+        private void ExtractInterface()
         {
+            // This passes the in memory DOM version of the profile
+            InterfaceListWindow ilw = new InterfaceListWindow(this);
+            ilw.Show();
+        }
+
+        private void InsertElements()
+        {
+            // The XML to be inserted will be either visual controls or interfaces, and these get inserted into different places.  The binding insertion goes in the same place regardless.
+
             // This inserts the extracted visual components and their bindings into the currently loaded profile
             if (_exportedControlElements != "")
             {
+                string insertionPosn = "//Children";  // this is where the controls live.
+                if(_exportedControlElements.IndexOf("Interface ")>0) insertionPosn = "//Interfaces";
                 XmlDocument tempDoc = new XmlDocument();
-                tempDoc.LoadXml(_exportedControlElements);
-                XmlNode targetNode = originalProfile.SelectSingleNode("//Children");
-                XmlNode insertionNode = originalProfile.ImportNode(tempDoc.FirstChild, true);
-                targetNode.AppendChild(insertionNode);
-                _unsavedChanges = true;
-                messageLog.Text += "Inserted Controls.\n";
+                try
+                {
+                    tempDoc.LoadXml(_exportedControlElements);
+                    XmlNode targetNode = originalProfile.SelectSingleNode(insertionPosn);
+                    XmlNode insertionNode = originalProfile.ImportNode(tempDoc.FirstChild, true);
+                    targetNode.AppendChild(insertionNode);
+                    UnsavedChanges = true;
+                    messageLog.Text += "Elements inserted.\n";
+                }
+                catch (XmlException ex)
+                {
+                    messageLog.Text += string.Format("XML Error processing Elements at line {1}, Position{2}.\n{0}.\nInsertion stopped & possibly incomplete.\n",ex.Message,ex.LineNumber,ex.LinePosition);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    messageLog.Text += string.Format("XML Error Inserting Elements.  {0}.  Insertion stopped & possibly incomplete.\n", ex.Message);
+                }
             }
             if (_exportedBindingsElements != "")
             {
                 XmlDocument tempDoc = new XmlDocument();
-                tempDoc.LoadXml("<X>" + _exportedBindingsElements + "</X>");
-                XmlNode targetNode = originalProfile.SelectSingleNode("//Bindings");
-                XmlNode insertionNode = originalProfile.ImportNode(tempDoc.FirstChild, true);
-                targetNode.AppendChild(insertionNode);
-                targetNode.InnerXml = targetNode.InnerXml.Replace("<X>", "").Replace("</X>", "");
-                _unsavedChanges = true;
-                messageLog.Text += "Inserted Bindings.\n";
+                try
+                {
+                    tempDoc.LoadXml("<X>" + _exportedBindingsElements + "</X>");
+                    XmlNode targetNode = originalProfile.SelectSingleNode("//Bindings");
+                    XmlNode insertionNode = originalProfile.ImportNode(tempDoc.FirstChild, true);
+                    targetNode.AppendChild(insertionNode);
+                    targetNode.InnerXml = targetNode.InnerXml.Replace("<X>", "").Replace("</X>", "");
+                    UnsavedChanges = true;
+                    messageLog.Text += "Bindings inserted .\n";
+                }
+                catch (XmlException ex)
+                {
+                    messageLog.Text += string.Format("XML Error processing Binding Elements at line {1}, Position{2}.\n{0}.\nInsertion stopped & possibly incomplete.\n", ex.Message, ex.LineNumber, ex.LinePosition);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    messageLog.Text += string.Format("XML Error Inserting Binding Elements.  {0}.  Insertion stopped & possibly incomplete.\n", ex.Message);
+                }
             }
         }
-        private void BtnSaveProfile_Click(object sender, RoutedEventArgs e)
+
+        private void SaveProfile()
         {
-            SaveFileDialog saveProfileDialog = new SaveFileDialog {
+            SaveFileDialog saveProfileDialog = new SaveFileDialog
+            {
                 InitialDirectory = Environment.GetEnvironmentVariable("userprofile") + "\\Documents\\Helios\\Profiles\\",
                 Filter = "Helios Profiles (*.hpf)|*.hpf|Helios Profile Backups (*.hpf.bak)|*.hpf.bak|All files (*.*)|*.*",
                 Title = "Save a Helios Profile"
@@ -208,26 +396,18 @@ namespace HeliosProfileUtils
                 try
                 {
                     originalProfile.Save(_newFileName);
-                    _unsavedChanges = false;
-                    messageLog.Text += String.Format("Successfully saved Helios profile to file: {0}\n", _newFileName );
+                    UnsavedChanges = false;
+                    messageLog.Text += String.Format("Successfully saved Helios profile to file: {0}\n", _newFileName);
                 }
                 catch (Exception ex)
                 {
-                    messageLog.Text += String.Format("Error saving Helios profile to file: {0}\n", _newFileName );
-                    //_unsavedChanges = true;
+                    messageLog.Text += String.Format("Error saving Helios profile to file: {0}\n", _newFileName);
+                    //UnsavedChanges = true;
                     throw (ex);
                 }
             }
         }
-        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs eventArgs)
-        {
-            if (_unsavedChanges)
-            {
-                _unsavedChanges = !PromptBox.ShowDialog("Unsaved Changes","There are unsaved changes to the loaded Helios profile. If you CONTINUE, you will lose the changes. " +
-    "  Press CANCEL to go back and save these changes.", "Cancel", "Continue");
-            }
-                eventArgs.Cancel = _unsavedChanges;
-        }
+
         private string CleanImageName(string sb)
         {
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
@@ -260,5 +440,6 @@ namespace HeliosProfileUtils
 
             return sb;
         }
-     }
+
+    }
 }
