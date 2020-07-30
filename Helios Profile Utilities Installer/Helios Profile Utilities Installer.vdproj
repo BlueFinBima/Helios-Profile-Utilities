@@ -62,6 +62,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
         "Release"
@@ -132,9 +140,9 @@
             "Folder" = "8:_2211C165957E40B2BA34E682E3331593"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
+            "Vital" = "11:FALSE"
             "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
+            "Hidden" = "11:TRUE"
             "System" = "11:FALSE"
             "Permanent" = "11:FALSE"
             "SharedLegacy" = "11:FALSE"
@@ -152,9 +160,9 @@
             "Folder" = "8:_2211C165957E40B2BA34E682E3331593"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
+            "Vital" = "11:FALSE"
             "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
+            "Hidden" = "11:TRUE"
             "System" = "11:FALSE"
             "Permanent" = "11:FALSE"
             "SharedLegacy" = "11:FALSE"
@@ -179,6 +187,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_B6E1AAF7F05A49C1B1A35F16E9C1DE99"
+                    {
+                    "Name" = "8:Helios"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_AE3D23166C624C5CBBC679E8DA185B7B"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_2211C165957E40B2BA34E682E3331593"
@@ -202,6 +221,17 @@
             "Property" = "8:StartMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_B03DFC1BECB14CB1AE26C22EE5348B58"
+                    {
+                    "Name" = "8:Helios"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_E33B747E39F44352939A45CB3952308D"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_9D7EA085888649499FFBFC127B37A034"
@@ -232,7 +262,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Helios Profile Utility"
         "ProductCode" = "8:{9838B047-FD91-471B-9B8E-600AB3891136}"
-        "PackageCode" = "8:{35D0ECD2-9553-4214-8D40-ED73B215C0F4}"
+        "PackageCode" = "8:{16CCABBB-E864-4286-BA3A-F02C8FF20A13}"
         "UpgradeCode" = "8:{ABCCF8FC-1D5A-4EE8-8E98-3E818F0138B6}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -255,7 +285,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:"
+        "PostBuildEvent" = "8:cscript //nologo \"$(ProjectDir)WiRunSql.vbs\" \"$(BuiltOuputPath)\" \"INSERT INTO Property(Property, Value) VALUES ('DISABLEADVTSHORTCUTS', '1')\""
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
@@ -354,28 +384,28 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_75B6D0E23518498DB8821AE5C1AC0296"
             {
-            "Name" = "8:Primary output from HeliosProfileUtils (Active)"
+            "Name" = "8:Helios Profile Utility"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_5FEBF9643DB342449361BFF1F5D70672"
-            "Folder" = "8:_7315A82DF6604E35A4072E24A467DE57"
+            "Folder" = "8:_B03DFC1BECB14CB1AE26C22EE5348B58"
             "WorkingFolder" = "8:"
             "Icon" = "8:_ABD2387BF916410F9FCDB0506A3506FC"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_EF71DF5827FB430D89B5DCB1710C5C9D"
             {
-            "Name" = "8:Primary output from HeliosProfileUtils (Active)"
+            "Name" = "8:Helios Profile Utility"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_5FEBF9643DB342449361BFF1F5D70672"
-            "Folder" = "8:_203ED97A633447B8B5958B5E537FE168"
+            "Folder" = "8:_B6E1AAF7F05A49C1B1A35F16E9C1DE99"
             "WorkingFolder" = "8:"
             "Icon" = "8:"
             "Feature" = "8:"
