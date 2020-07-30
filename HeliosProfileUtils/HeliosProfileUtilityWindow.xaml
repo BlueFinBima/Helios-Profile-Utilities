@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HeliosProfileUtils"
         mc:Ignorable="d"
-        Title="Helios Profile Utility" Height="450" Width="800" Closing="MainWindowClosing">
+        Title="Helios Profile Utility" Height="480" Width="800" Closing="MainWindowClosing">
     <DockPanel Margin="10">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -24,12 +24,12 @@
             </MenuItem>
 
             <MenuItem Header="_Tools">
-                <MenuItem Header="_Extract Panel" Click="MenuItem_Click"/>
-                <MenuItem Header="E_xtract Interface" Click="MenuItem_Click" IsEnabled="True"/>
+                <MenuItem Header="_Extract Panel" Click="MenuItem_Click"  ToolTipService.ToolTip="Extract Panel XML from the profile"/>
+                <MenuItem Header="E_xtract Interface" Click="MenuItem_Click" ToolTipService.ToolTip="Extract Interface XML from the profile" IsEnabled="True"/>
                 <Separator />
-                <MenuItem Header="_Insert Elements" Click="MenuItem_Click"/>
+                <MenuItem Header="_Insert Elements" Click="MenuItem_Click" ToolTipService.ToolTip="Insert extracted XML into the currently open Helios Profile"/>
                 <Separator />
-                <MenuItem Header="_Package Images" Click="MenuItem_Click"/>
+                <MenuItem Header="_Package Images" Click="MenuItem_Click" ToolTipService.ToolTip="Lists the image resources in the current Helios profile and copies those images to a single directrory" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Click="MenuItem_Click"/>
@@ -53,9 +53,9 @@
                 <Button Name="BtnPackageImages" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Package Images</Button>
                 <Button Name="BtnSaveProfile" Click="Btn_Click" Visibility="Hidden" Margin="5,0,5,0">Save Modified Profile</Button>
             </WrapPanel>
-            <TextBox Name="messageLog" Grid.Column="0" Grid.ColumnSpan="3"  Grid.Row ="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="LightPink" HorizontalAlignment="Center" MinWidth="772" Margin="0,0,0,0" />
-            <TextBox Name="profileEditor"  Grid.Column="0" Width= "{Binding ElementName=LeftColumnDefinition, Path=Width}" Height="Auto"  MinWidth="374" Grid.Row ="2" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Center" Margin="0,10,0,0" TextChanged="Editor_TextChanged" />
-            <TextBox Name="imagesEditor" Grid.Column="2"  Width= "{Binding ElementName=RightColumnDefinition, Path=Width}" Height="Auto" MinWidth="374" Grid.Row ="2"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Center" Margin="0,10,0,0" TextChanged="Editor_TextChanged" />
+            <TextBox Name="messageLog" Grid.Column="0" Grid.ColumnSpan="3"  Grid.Row ="1"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="LightPink" HorizontalAlignment="Center" MinWidth="772" Margin="0,0,0,0" ToolTipService.ToolTip="Messages are displayed here"/>
+            <TextBox Name="profileEditor"  Grid.Column="0" Width= "{Binding ElementName=LeftColumnDefinition, Path=Width}" Height="Auto"  MinWidth="374" Grid.Row ="2" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Center" Margin="0,10,0,0" TextChanged="Editor_TextChanged" ToolTipService.ToolTip="This is effectively a clipboard for extracted panel and interface XML"/>
+            <TextBox Name="imagesEditor" Grid.Column="2"  Width= "{Binding ElementName=RightColumnDefinition, Path=Width}" Height="Auto" MinWidth="374" Grid.Row ="2"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Background="Azure" HorizontalAlignment="Center" Margin="0,10,0,0" TextChanged="Editor_TextChanged" ToolTipService.ToolTip="This is effectively a clipboard for extracted XML for bindings" />
         </Grid>
     </DockPanel>
     <Window.CommandBindings>

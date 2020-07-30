@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HeliosProfileUtils"
         mc:Ignorable="d"
-        Title="Helios Profile Panel List" Height="450" Width="800" Closing="WindowClosing">
+        Title="Helios Profile Panel List" Height="480" Width="800" Closing="WindowClosing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row ="0" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="40,4,40,10">
-            <Button Name="BtnExtractPanel" Click="BtnExtractPanel_Click" Margin="5,0,5,0">Extract Panel</Button>
+            <Button Name="BtnExtractPanel" Click="BtnExtractPanel_Click" Margin="5,0,5,0" ToolTipService.ToolTip="Extract Panel XML from the selected panel" >Extract Panel</Button>
         </WrapPanel>
-        <TreeView Grid.Row="1" Margin="8,0,8,8" Background="Azure"  x:Name="treeView" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+        <TreeView Grid.Row="1" Margin="8,0,8,8" Background="Azure"  x:Name="treeView" SelectedItemChanged="TreeView_SelectedItemChanged" ToolTipService.ToolTip="Panel hierarchy from the Helios profile"/>
     </Grid>
 </Window>

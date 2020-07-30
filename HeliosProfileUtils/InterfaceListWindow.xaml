@@ -12,8 +12,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <WrapPanel Grid.Row ="0" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="40,4,40,10">
-            <Button Name="BtnExtractPanel" Click="BtnExtractPanel_Click" Margin="5,0,5,0">Extract Interface</Button>
+            <Button Name="BtnExtractPanel" Click="BtnExtractPanel_Click" Margin="5,0,5,0" ToolTipService.ToolTip="Extract Interface XML from the Helios profile">Extract Interface</Button>
         </WrapPanel>
-        <TreeView Grid.Row="1" Margin="8,0,8,8" Background="Azure"  x:Name="treeView" SelectedItemChanged="TreeView_SelectedItemChanged"/>
+        <TreeView Grid.Row="1" Margin="8,0,8,8" Background="Azure"  x:Name="treeView" SelectedItemChanged="TreeView_SelectedItemChanged" ToolTipService.ToolTip="Interfaces in the current Helios profile"/>
     </Grid>
 </Window>
