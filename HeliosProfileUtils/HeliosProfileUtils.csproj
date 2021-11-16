@@ -97,6 +97,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BindingXmlNode.cs" />
     <Compile Include="ExtractedPanelWindow.xaml.cs">
       <DependentUpon>ExtractedPanelWindow.xaml</DependentUpon>
     </Compile>

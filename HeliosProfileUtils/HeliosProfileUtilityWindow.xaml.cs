@@ -110,7 +110,13 @@ namespace HeliosProfileUtils
                     break;
                 case "_Package Images":
                     PackageImages();
-                    break;                  
+                    break;
+                case "_Check Bindings":
+                    ProcessCheckBindings();
+                    break;
+                case "_Remove Duplicated Bindings":
+                    ProcessRemoveBindings();
+                    break;
                 case "_About":
                     new AboutBox1().ShowDialog();
                     break;
@@ -380,8 +386,54 @@ namespace HeliosProfileUtils
                 }
             }
         }
+        private void ProcessCheckBindings()
+        {
+            messageLog.Text += string.Format("Checking Bindings for Duplicates.\n");
 
-        private void SaveProfile()
+            XmlNodeList bindingsList;
+            // find all of the nodes for bindings
+            bindingsList = originalProfile.SelectNodes("descendant::Binding");
+            int index = 0;
+            int duplicateCount = 0;
+            Dictionary<int, XmlNode> bindingDictionary = new Dictionary<int, XmlNode>();
+            if (bindingsList.Count > 0)
+            {
+                XmlNode tempNode = bindingsList.Item(0);
+                foreach (XmlNode bindingNode in bindingsList)
+                {
+                    if (index == 0)
+                    {
+                        bindingDictionary.Add(index++, bindingNode);
+                    }
+                    else
+                    {
+                        if (tempNode.OuterXml!=bindingNode.OuterXml)
+                        {
+                            bindingDictionary.Add(index++, bindingNode);
+                            tempNode = bindingNode;
+                            //messageLog.Text += string.Format("Node:\n {0}", bindingNode.ToString());
+                        }
+                        else
+                        {
+                            imagesEditor.Text += string.Format("{0}\n", bindingNode.InnerXml);
+                            duplicateCount++;
+                            //messageLog.Text += string.Format("Duplicate Found:\n {0}", bindingNode.ToString());
+                        }
+                    }
+                }
+                messageLog.Text += string.Format("Found {0} unique bindings.\nFound {1} duplicate bindings", bindingDictionary.Count, duplicateCount);
+                foreach(XmlNode uniqueBindingNode in bindingDictionary.Values)
+                {
+                    profileEditor.Text += string.Format("    {0}\n", uniqueBindingNode.OuterXml);
+
+                }
+            }
+        }
+        private void ProcessRemoveBindings()
+        {
+
+        }
+            private void SaveProfile()
         {
             SaveFileDialog saveProfileDialog = new SaveFileDialog
             {
@@ -407,7 +459,10 @@ namespace HeliosProfileUtils
                 }
             }
         }
-
+        private bool BindingNodeEquals(XmlNode n1, XmlNode n2)
+        {
+            return n1.OuterXml == n2.OuterXml?true:false;
+        }
         private string CleanImageName(string sb)
         {
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;

@@ -30,6 +30,9 @@
                 <MenuItem Header="_Insert Elements" Click="MenuItem_Click" ToolTipService.ToolTip="Insert extracted XML into the currently open Helios Profile"/>
                 <Separator />
                 <MenuItem Header="_Package Images" Click="MenuItem_Click" ToolTipService.ToolTip="Lists the image resources in the current Helios profile and copies those images to a single directrory" />
+                <Separator />
+                <MenuItem Header="_Check Bindings" Click="MenuItem_Click" ToolTipService.ToolTip="Checks the profile for duplicate bindings" />
+                <MenuItem Header="_Remove Duplicated Bindings" Click="MenuItem_Click" ToolTipService.ToolTip="Removes duplicate bindings" IsEnabled="False"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_About" Click="MenuItem_Click"/>
