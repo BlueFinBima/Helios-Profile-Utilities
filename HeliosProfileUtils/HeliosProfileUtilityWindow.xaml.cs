@@ -112,10 +112,10 @@ namespace HeliosProfileUtils
                     PackageImages();
                     break;
                 case "_Check Bindings":
-                    ProcessCheckBindings();
+                    ProcessBindings(false);
                     break;
-                case "_Remove Duplicated Bindings":
-                    ProcessRemoveBindings();
+                case "_Remove Duplicate Bindings":
+                    ProcessBindings(true);
                     break;
                 case "_About":
                     new AboutBox1().ShowDialog();
@@ -261,6 +261,32 @@ namespace HeliosProfileUtils
                 UnsavedChanges = false;
             }
         }
+        private void SaveProfile()
+        {
+            SaveFileDialog saveProfileDialog = new SaveFileDialog
+            {
+                InitialDirectory = Environment.GetEnvironmentVariable("userprofile") + "\\Documents\\Helios\\Profiles\\",
+                Filter = "Helios Profiles (*.hpf)|*.hpf|Helios Profile Backups (*.hpf.bak)|*.hpf.bak|All files (*.*)|*.*",
+                Title = "Save a Helios Profile"
+            };
+            saveProfileDialog.ShowDialog();
+            if (saveProfileDialog.FileName != "")
+            {
+                _newFileName = saveProfileDialog.FileName;
+                try
+                {
+                    originalProfile.Save(_newFileName);
+                    UnsavedChanges = false;
+                    messageLog.Text += String.Format("Successfully saved Helios profile to file: {0}\n", _newFileName);
+                }
+                catch (Exception ex)
+                {
+                    messageLog.Text += String.Format("Error saving Helios profile to file: {0}\n", _newFileName);
+                    //UnsavedChanges = true;
+                    throw (ex);
+                }
+            }
+        }
 
         private void PackageImages()
         {
@@ -386,7 +412,7 @@ namespace HeliosProfileUtils
                 }
             }
         }
-        private void ProcessCheckBindings()
+        private void ProcessBindings(bool resolve = false)
         {
             messageLog.Text += string.Format("Checking Bindings for Duplicates.\n");
 
@@ -395,70 +421,66 @@ namespace HeliosProfileUtils
             bindingsList = originalProfile.SelectNodes("descendant::Binding");
             int index = 0;
             int duplicateCount = 0;
-            Dictionary<int, XmlNode> bindingDictionary = new Dictionary<int, XmlNode>();
+            Dictionary<string, XmlNode> bindingDictionary = new Dictionary<string, XmlNode>();
             if (bindingsList.Count > 0)
             {
-                XmlNode tempNode = bindingsList.Item(0);
                 foreach (XmlNode bindingNode in bindingsList)
                 {
                     if (index == 0)
                     {
-                        bindingDictionary.Add(index++, bindingNode);
+                        index++;
+                        bindingDictionary.Add(bindingNode.OuterXml, bindingNode);
                     }
                     else
                     {
-                        if (tempNode.OuterXml!=bindingNode.OuterXml)
+                        if (!bindingDictionary.ContainsKey(bindingNode.OuterXml))
                         {
-                            bindingDictionary.Add(index++, bindingNode);
-                            tempNode = bindingNode;
-                            //messageLog.Text += string.Format("Node:\n {0}", bindingNode.ToString());
+                            index++;
+                            bindingDictionary.Add(bindingNode.OuterXml, bindingNode);
                         }
                         else
                         {
-                            imagesEditor.Text += string.Format("{0}\n", bindingNode.InnerXml);
+                            imagesEditor.Text += string.Format("    {0}\n", bindingNode.OuterXml);
                             duplicateCount++;
-                            //messageLog.Text += string.Format("Duplicate Found:\n {0}", bindingNode.ToString());
                         }
                     }
                 }
-                messageLog.Text += string.Format("Found {0} unique bindings.\nFound {1} duplicate bindings", bindingDictionary.Count, duplicateCount);
+                messageLog.Text += string.Format("Found {0} unique bindings.\nFound {1} duplicate bindings\n", bindingDictionary.Count, duplicateCount);
                 foreach(XmlNode uniqueBindingNode in bindingDictionary.Values)
                 {
                     profileEditor.Text += string.Format("    {0}\n", uniqueBindingNode.OuterXml);
 
                 }
             }
-        }
-        private void ProcessRemoveBindings()
-        {
+            if (resolve)
+            {
+               try
+                {
+                    //tempDoc.LoadXml(_exportedControlElements);
+                    XmlNode targetNode = originalProfile.SelectSingleNode("//Bindings");
+                    targetNode.RemoveAll();
+                    messageLog.Text += "All Binding Elements removed.\n";
 
-        }
-            private void SaveProfile()
-        {
-            SaveFileDialog saveProfileDialog = new SaveFileDialog
-            {
-                InitialDirectory = Environment.GetEnvironmentVariable("userprofile") + "\\Documents\\Helios\\Profiles\\",
-                Filter = "Helios Profiles (*.hpf)|*.hpf|Helios Profile Backups (*.hpf.bak)|*.hpf.bak|All files (*.*)|*.*",
-                Title = "Save a Helios Profile"
-            };
-            saveProfileDialog.ShowDialog();
-            if (saveProfileDialog.FileName != "")
-            {
-                _newFileName = saveProfileDialog.FileName;
-                try
-                {
-                    originalProfile.Save(_newFileName);
-                    UnsavedChanges = false;
-                    messageLog.Text += String.Format("Successfully saved Helios profile to file: {0}\n", _newFileName);
+                    foreach (XmlNode uniqueBindingNode in bindingDictionary.Values)
+                    {
+                        targetNode.AppendChild(uniqueBindingNode);
+
+                    }
+                    UnsavedChanges = true;
+                    messageLog.Text += $"{bindingDictionary.Count} Binding Elements inserted.\n";
                 }
-                catch (Exception ex)
+                catch (XmlException ex)
                 {
-                    messageLog.Text += String.Format("Error saving Helios profile to file: {0}\n", _newFileName);
-                    //UnsavedChanges = true;
-                    throw (ex);
+                    messageLog.Text += string.Format("XML Error processing Elements at line {1}, Position{2}.\n{0}.\nInsertion stopped & possibly incomplete.\n", ex.Message, ex.LineNumber, ex.LinePosition);
                 }
+                catch (InvalidOperationException ex)
+                {
+                    messageLog.Text += string.Format("XML Error Inserting Elements.  {0}.  Insertion stopped & possibly incomplete.\n", ex.Message);
+                }
+
             }
         }
+
         private bool BindingNodeEquals(XmlNode n1, XmlNode n2)
         {
             return n1.OuterXml == n2.OuterXml?true:false;
